@@ -6,7 +6,6 @@ import 'package:e_commerce_app/widget/app_assets.dart';
 import 'package:e_commerce_app/widget/text_screen.dart';
 import 'package:e_commerce_app/widget/product_card.dart';
 
-
 class HomeMainPageScreen extends StatelessWidget {
   const HomeMainPageScreen({super.key});
 
@@ -20,6 +19,8 @@ class HomeMainPageScreen extends StatelessWidget {
         itemName: 'Evening Dress',
         oldPrice: '123\$',
         newPrice: '23\$',
+        color: 'green',
+        size: 'Xl',
       ),
       Product(
         imageUrl: AppAssets.imageMenHoodies,
@@ -28,6 +29,8 @@ class HomeMainPageScreen extends StatelessWidget {
         itemName: 'Sporty Dress',
         oldPrice: '75\$',
         newPrice: '45\$',
+        color: 'green',
+        size: 'Xl',
       ),
       Product(
         imageUrl: AppAssets.imageVisualSearch,
@@ -36,6 +39,8 @@ class HomeMainPageScreen extends StatelessWidget {
         itemName: 'Classic Bag',
         oldPrice: '500\$',
         newPrice: '399\$',
+        color: 'green',
+        size: 'Xl',
       ),
     ];
     return AnnotatedRegion<SystemUiOverlayStyle>(

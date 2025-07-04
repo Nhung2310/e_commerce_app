@@ -19,6 +19,8 @@ class HomeMainPage2Screen extends StatelessWidget {
         itemName: 'Evening Dress',
         oldPrice: '123\$',
         newPrice: '23\$',
+        color: 'green',
+        size: 'Xl',
       ),
       Product(
         imageUrl: AppAssets.imageMenHoodies,
@@ -27,6 +29,8 @@ class HomeMainPage2Screen extends StatelessWidget {
         itemName: 'Sporty Dress',
         oldPrice: '75\$',
         newPrice: '45\$',
+        color: 'green',
+        size: 'Xl',
       ),
       Product(
         imageUrl: AppAssets.imageVisualSearch,
@@ -35,6 +39,8 @@ class HomeMainPage2Screen extends StatelessWidget {
         itemName: 'Classic Bag',
         oldPrice: '500\$',
         newPrice: '399\$',
+        color: 'green',
+        size: 'Xl',
       ),
     ];
 

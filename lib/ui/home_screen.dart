@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:e_commerce_app/ui/my_bag_screen.dart';
 import 'package:e_commerce_app/widget/app_color.dart';
+import 'package:e_commerce_app/ui/favorites_screen.dart';
+import 'package:e_commerce_app/ui/my_profile_screen.dart';
 import 'package:e_commerce_app/ui/home/my_home_page.dart';
 import 'package:e_commerce_app/ui/categories/categories_screen.dart';
 
@@ -15,9 +18,9 @@ class _HomeScreenState extends State<HomeScreen> {
   final screens = [
     const MyHomePage(),
     const CategoriesScreen(),
-    const Center(child: Text('Bag Page')),
-    const Center(child: Text('Favorite Page')),
-    const Center(child: Text('Profile Page')),
+    const MyBagScreen(),
+    const FavoritesScreen(),
+    const MyProfileScreen(),
   ];
 
   @override

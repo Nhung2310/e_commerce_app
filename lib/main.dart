@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:e_commerce_app/ui/home_screen.dart';
+import 'package:e_commerce_app/ui/my_bag_screen.dart';
+import 'package:e_commerce_app/ui/favorites_screen.dart';
 import 'package:e_commerce_app/widget/product_card.dart';
 import 'package:e_commerce_app/ui/home/my_home_page.dart';
+import 'package:e_commerce_app/ui/shipping_addresses.dart';
+import 'package:e_commerce_app/ui/my_checkout_screen.dart';
 import 'package:e_commerce_app/ui/product_card_screen.dart';
+import 'package:e_commerce_app/ui/payment_cards_screen.dart';
 import 'package:e_commerce_app/ui/rating_and_reviews_screen.dart';
 import 'package:e_commerce_app/ui/categories/filters_screen.dart';
 import 'package:e_commerce_app/ui/categories/catalog1_screen.dart';
@@ -38,23 +43,3 @@ class MyWidget extends StatelessWidget {
     return const Placeholder();
   }
 }
-
-// void run() {
-//   print("1");
-//   test();
-//   print("2");
-// }
-
-// Future<void> test() async {
-//   Future.delayed(const Duration(seconds: 5)).then((value) {
-//     value = 5;
-
-//     print('$value');
-//   });
-  
-//   dynamic test = await Future.delayed(const Duration(seconds: 5));
-//   print('$test');
-// }
-// 1
-// Instance of '_Future<dynamic>'
-// 2

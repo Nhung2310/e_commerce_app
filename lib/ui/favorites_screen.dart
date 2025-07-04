@@ -6,17 +6,16 @@ import 'package:e_commerce_app/widget/text_screen.dart';
 import 'package:e_commerce_app/widget/product_card.dart';
 import 'package:e_commerce_app/ui/product_card_screen.dart';
 import 'package:e_commerce_app/widget/icon_button_screen.dart';
-import 'package:e_commerce_app/ui/rating_and_reviews_screen.dart';
 import 'package:e_commerce_app/ui/categories/filters_screen.dart';
 
-class Catalog1Screen extends StatefulWidget {
-  const Catalog1Screen({super.key});
+class FavoritesScreen extends StatefulWidget {
+  const FavoritesScreen({super.key});
 
   @override
-  State<Catalog1Screen> createState() => _Catalog1ScreenState();
+  State<FavoritesScreen> createState() => _FavoritesScreenState();
 }
 
-class _Catalog1ScreenState extends State<Catalog1Screen> {
+class _FavoritesScreenState extends State<FavoritesScreen> {
   bool _isView = false;
   String _selectedSortOption = 'Popular';
   String? _selectedSize;
@@ -88,12 +87,6 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
       backgroundColor: AppColor.whiteBackgroundColor,
       appBar: _isView
           ? AppBar(
-              leading: IconButtonBack(
-                iconButtonBack: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-
               title: null,
               actions: [
                 IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
@@ -105,7 +98,7 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
-                    child: TextHeadLine(text: 'Women’s tops'),
+                    child: TextHeadLine(text: 'Favorites'),
                   ),
                 ),
               ),
@@ -116,7 +109,7 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
                   Navigator.of(context).pop();
                 },
               ),
-              title: Center(child: TextHeadLine(text: 'Women’s tops')),
+              title: Center(child: TextHeadLine(text: 'Favorites')),
               actions: [
                 IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
               ],
@@ -196,14 +189,12 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
                               children: products.map<Widget>((product) {
-                                return ProductCardList(
+                                return ProductCardListViewFavorites(
                                   product: product,
                                   textLabel: '',
                                   colorTextLabel: AppColor.whiteColor,
                                   colorLabel: AppColor.redColorBox,
-                                  onTap: () {
-                                    showModelBottomSheetSize();
-                                  },
+                                  onTap: () {},
                                   onDoubleTap: () {
                                     Navigator.push(
                                       context,
@@ -231,16 +222,14 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
                               mainAxisSpacing: 10.0,
                               crossAxisSpacing: 10.0,
 
-                              childAspectRatio: 150 / 290,
+                              childAspectRatio: 150 / 300,
                             ),
                         itemCount: products.length,
                         itemBuilder: (context, index) {
                           final product = products[index];
-                          return ProductCard(
+                          return ProductCardGridViewFavorites(
                             product: product,
-                            onTap: () {
-                              showModelBottomSheetSize();
-                            },
+                            onTap: () {},
                             onDoubleTap: () {
                               Navigator.push(
                                 context,
@@ -253,6 +242,7 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
 
                             colorTextLabel: AppColor.whiteColor,
                             colorLabel: Colors.transparent,
+                            textLabel: '',
                           );
                         },
                       ),
@@ -330,114 +320,6 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
           },
         );
       },
-    );
-  }
-
-  void showModelBottomSheetSize() {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Container(
-              height: 360,
-              color: AppColor.whiteBackgroundColor,
-              child: Column(
-                children: [
-                  const SizedBox(height: 16),
-                  const Center(
-                    child: Text(
-                      'Select size',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                        color: AppColor.blackColor,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        _buildSizeOption('XS', setState),
-                        _buildSizeOption('S', setState),
-                        _buildSizeOption('M', setState),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        _buildSizeOption('L', setState),
-                        _buildSizeOption('XL', setState),
-                      ],
-                    ),
-                  ),
-                  const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Size info'),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.keyboard_arrow_right),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: ButtonOnclick(
-                      textButton: 'ADD TO CART',
-                      functionButtonClick: () {
-                        print('Kích thước đã chọn: $_selectedSize');
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildSizeOption(String size, StateSetter setState) {
-    bool isSelected = (_selectedSize == size);
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedSize = size;
-        });
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          width: 90,
-          height: 40,
-          decoration: BoxDecoration(
-            color: isSelected ? AppColor.redColor : Colors.transparent,
-            border: Border.all(
-              color: isSelected ? AppColor.redColor : AppColor.grayColor,
-            ),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Center(
-            child: Text(
-              size,
-              style: TextStyle(
-                color: isSelected ? AppColor.whiteColor : AppColor.blackColor,
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

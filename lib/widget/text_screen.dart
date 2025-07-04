@@ -174,9 +174,9 @@ class TextItemProduct extends StatelessWidget {
     return Text(
       text,
       style: const TextStyle(
-        fontSize: 16,
+        fontSize: 14,
         color: AppColor.blackColor,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.bold,
       ),
     );
   }
@@ -191,27 +191,37 @@ class TextPrice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text.rich(
-      TextSpan(
-        children: <TextSpan>[
-          TextSpan(
-            text: '$newPrice',
-            style: const TextStyle(
-              color: AppColor.grayColor,
-              decoration: TextDecoration.lineThrough,
-              fontWeight: FontWeight.w600,
+    if (oldPrice == null || oldPrice!.isEmpty) {
+      return Text(
+        '$newPrice',
+        style: const TextStyle(
+          color: AppColor.blackColor,
+          fontWeight: FontWeight.w600,
+        ),
+      );
+    } else {
+      return Text.rich(
+        TextSpan(
+          children: <TextSpan>[
+            TextSpan(
+              text: '$oldPrice',
+              style: const TextStyle(
+                color: AppColor.grayColor,
+                decoration: TextDecoration.lineThrough,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          TextSpan(
-            text: ' $oldPrice',
-            style: const TextStyle(
-              color: AppColor.redColor,
-              fontWeight: FontWeight.w600,
+            TextSpan(
+              text: ' $newPrice',
+              style: const TextStyle(
+                color: AppColor.redColor,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
   }
 }
 
@@ -317,7 +327,7 @@ class TextDate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       textDate,
-      style: TextStyle(fontSize: 11, color: AppColor.grayColor),
+      style: const TextStyle(fontSize: 11, color: AppColor.grayColor),
     );
   }
 }
@@ -339,6 +349,97 @@ class TextReview extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class RichTextProduct extends StatelessWidget {
+  String textItem;
+  String textDetailItem;
+  RichTextProduct({
+    required this.textItem,
+    required this.textDetailItem,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: textItem,
+            style: const TextStyle(fontSize: 11, color: AppColor.grayColor),
+          ),
+          TextSpan(
+            text: textDetailItem,
+            style: const TextStyle(fontSize: 11, color: AppColor.blackColor),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class TextDiscount extends StatelessWidget {
+  String text;
+  double sizeText;
+  TextDiscount({required this.text, required this.sizeText, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: AppColor.whiteColor,
+        fontSize: sizeText,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class TextHead extends StatelessWidget {
+  String textHead;
+  TextHead({required this.textHead, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      textHead,
+      style: const TextStyle(
+        color: AppColor.blackColor,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class TextCard extends StatelessWidget {
+  String text;
+  double size;
+  FontWeight fontWeight;
+  TextCard({
+    required this.text,
+    required this.size,
+    required this.fontWeight,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: AppColor.whiteColor,
+        fontSize: size,
+        fontWeight: fontWeight,
+      ),
     );
   }
 }

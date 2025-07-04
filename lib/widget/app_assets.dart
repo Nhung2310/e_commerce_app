@@ -12,4 +12,11 @@ class AppAssets {
   static const String imageNew = 'assets/image_category_new.png';
   static const String imageShoes = 'assets/image_category_shoes.png';
   static const String avatar = 'assets/avatar.jpg';
+  static const String imageGroup = 'assets/group.png';
+  static const String imageDhl = 'assets/dhl.png';
+
+  static const String imageUsps = 'assets/usps.png';
+  static const String imageFedex = 'assets/fedex.png';
+  static const String imageChip = 'assets/chip.png';
+  static const String imageSuccess = 'assets/image.png';
 }

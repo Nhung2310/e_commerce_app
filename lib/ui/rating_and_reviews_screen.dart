@@ -3,6 +3,7 @@ import 'package:e_commerce_app/model/review.dart';
 import 'package:e_commerce_app/widget/app_color.dart';
 import 'package:e_commerce_app/widget/app_assets.dart';
 import 'package:e_commerce_app/widget/text_screen.dart';
+import 'package:e_commerce_app/widget/image_picker.dart';
 import 'package:e_commerce_app/widget/icon_button_screen.dart';
 import 'package:e_commerce_app/widget/start_rating_widget.dart';
 
@@ -631,42 +632,43 @@ class _RatingAndReviewsScreenState extends State<RatingAndReviewsScreen> {
                           ),
                           const SizedBox(height: 16),
 
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                            ),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Container(
-                                height: 104,
-                                width: 104,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: AppColor.whiteColor,
-                                ),
-                                child: const Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: AppColor.redColor,
-                                      radius: 20,
-                                      child: Icon(
-                                        Icons.camera_alt,
-                                        color: AppColor.whiteColor,
-                                        size: 20,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      textAlign: TextAlign.center,
-                                      'Add your photos',
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(
+                          //     horizontal: 16.0,
+                          //   ),
+                          //   child: Align(
+                          //     alignment: Alignment.centerLeft,
+                          //     child: Container(
+                          //       height: 104,
+                          //       width: 104,
+                          //       decoration: BoxDecoration(
+                          //         borderRadius: BorderRadius.circular(10),
+                          //         color: AppColor.whiteColor,
+                          //       ),
+                          //       child: const Column(
+                          //         mainAxisAlignment: MainAxisAlignment.center,
+                          //         children: [
+                          //           CircleAvatar(
+                          //             backgroundColor: AppColor.redColor,
+                          //             radius: 20,
+                          //             child: Icon(
+                          //               Icons.camera_alt,
+                          //               color: AppColor.whiteColor,
+                          //               size: 20,
+                          //             ),
+                          //           ),
+                          //           SizedBox(height: 4),
+                          //           Text(
+                          //             textAlign: TextAlign.center,
+                          //             'Add your photos',
+                          //             style: TextStyle(fontSize: 12),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                          const ImagePickerWidget(),
                           const SizedBox(height: 24),
                           ButtonOnclick(
                             textButton: 'SEND REVIEW',
