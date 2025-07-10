@@ -97,20 +97,48 @@ class IconButtonBack extends StatelessWidget {
 
 // ignore: must_be_immutable
 class ButtonCatalog extends StatelessWidget {
-  String text;
-  ButtonCatalog({required this.text, super.key});
+  final String text;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const ButtonCatalog({
+    super.key,
+    required this.text,
+    this.isSelected = false,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: SizedBox(
+        height: 40,
         child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(backgroundColor: AppColor.blackColor),
+          onPressed: onTap,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isSelected
+                ? AppColor.redColor
+                : AppColor.whiteBackgroundColor,
+            foregroundColor: isSelected
+                ? AppColor.whiteColor
+                : AppColor.blackColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: BorderSide(
+                color: isSelected ? AppColor.redColor : AppColor.grayColor,
+                width: 1,
+              ),
+            ),
+            elevation: 0,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+          ),
           child: Text(
             text,
-            style: const TextStyle(fontSize: 14, color: AppColor.whiteColor),
+            style: TextStyle(
+              fontSize: 14,
+              color: isSelected ? AppColor.whiteColor : AppColor.blackColor,
+            ),
           ),
         ),
       ),

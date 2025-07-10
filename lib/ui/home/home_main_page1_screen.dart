@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' hide Title;
 import 'package:e_commerce_app/model/product.dart';
 import 'package:e_commerce_app/widget/app_color.dart';
+import 'package:e_commerce_app/data/product_data.dart';
 import 'package:e_commerce_app/widget/app_assets.dart';
 import 'package:e_commerce_app/widget/text_screen.dart';
 import 'package:e_commerce_app/widget/product_card.dart';
@@ -11,38 +12,6 @@ class HomeMainPageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Product> products = [
-      Product(
-        imageUrl: AppAssets.imageHome2,
-        rating: 3.5,
-        brandName: 'Dorothy Perkins',
-        itemName: 'Evening Dress',
-        oldPrice: '123\$',
-        newPrice: '23\$',
-        color: 'green',
-        size: 'Xl',
-      ),
-      Product(
-        imageUrl: AppAssets.imageMenHoodies,
-        rating: 4.0,
-        brandName: 'Mango',
-        itemName: 'Sporty Dress',
-        oldPrice: '75\$',
-        newPrice: '45\$',
-        color: 'green',
-        size: 'Xl',
-      ),
-      Product(
-        imageUrl: AppAssets.imageVisualSearch,
-        rating: 5.0,
-        brandName: 'Gucci',
-        itemName: 'Classic Bag',
-        oldPrice: '500\$',
-        newPrice: '399\$',
-        color: 'green',
-        size: 'Xl',
-      ),
-    ];
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       child: Scaffold(
@@ -118,7 +87,7 @@ class HomeMainPageScreen extends StatelessWidget {
                       height: 300,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
-                        children: products.map((product) {
+                        children: mockProducts.map((product) {
                           return ProductCard(
                             product: product,
                             textLabel: 'New',

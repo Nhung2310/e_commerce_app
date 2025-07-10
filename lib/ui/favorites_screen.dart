@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:e_commerce_app/model/product.dart';
 import 'package:e_commerce_app/widget/app_color.dart';
+import 'package:e_commerce_app/data/product_data.dart';
 import 'package:e_commerce_app/widget/app_assets.dart';
 import 'package:e_commerce_app/widget/text_screen.dart';
 import 'package:e_commerce_app/widget/product_card.dart';
 import 'package:e_commerce_app/ui/product_card_screen.dart';
 import 'package:e_commerce_app/widget/icon_button_screen.dart';
+import 'package:e_commerce_app/services/favorites_service.dart';
 import 'package:e_commerce_app/ui/categories/filters_screen.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -19,70 +22,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   bool _isView = false;
   String _selectedSortOption = 'Popular';
   String? _selectedSize;
-  final List<Product> products = [
-    Product(
-      imageUrl: AppAssets.imageHome2,
-      rating: 3.5,
-      brandName: 'Dorothy Perkins',
-      itemName: 'Evening Dress',
-      oldPrice: '123\$',
-      newPrice: '23\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageMenHoodies,
-      rating: 4.0,
-      brandName: 'Mango',
-      itemName: 'Sporty Dress',
-      oldPrice: '75\$',
-      newPrice: '45\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageVisualSearch,
-      rating: 5.0,
-      brandName: 'Gucci',
-      itemName: 'Classic Bag',
-      oldPrice: '500\$',
-      newPrice: '399\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageHome2,
-      rating: 3.5,
-      brandName: 'Dorothy Perkins',
-      itemName: 'Evening Dress',
-      oldPrice: '123\$',
-      newPrice: '23\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageMenHoodies,
-      rating: 4.0,
-      brandName: 'Mango',
-      itemName: 'Sporty Dress',
-      oldPrice: '75\$',
-      newPrice: '45\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageVisualSearch,
-      rating: 5.0,
-      brandName: 'Gucci',
-      itemName: 'Classic Bag',
-      oldPrice: '500\$',
-      newPrice: '399\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-  ];
+
   @override
   Widget build(BuildContext context) {
+    final favoritesService = Provider.of<FavoritesService>(context);
+    final List<Product> favoriteProducts = favoritesService.favoriteProducts;
     return Scaffold(
       backgroundColor: AppColor.whiteBackgroundColor,
       appBar: _isView
@@ -124,12 +68,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  ButtonCatalog(text: 'T-shirts'),
-                  ButtonCatalog(text: 'Crop tops'),
-                  ButtonCatalog(text: 'Sleeveless'),
-                  ButtonCatalog(text: 'T-shirts'),
-                  ButtonCatalog(text: 'Crop tops'),
-                  ButtonCatalog(text: 'Sleeveless'),
+                  ButtonCatalog(text: 'T-shirts', onTap: () {}),
+                  ButtonCatalog(text: 'Crop tops', onTap: () {}),
+                  ButtonCatalog(text: 'Sleeveless', onTap: () {}),
+                  ButtonCatalog(text: 'T-shirts', onTap: () {}),
+                  ButtonCatalog(text: 'Crop tops', onTap: () {}),
+                  ButtonCatalog(text: 'Sleeveless', onTap: () {}),
                 ],
               ),
             ),
@@ -176,7 +120,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 ],
               ),
             ),
-            _isView
+            favoriteProducts.isEmpty
+                ? const Expanded(
+                    child: const Center(child: const Text('No empty')),
+                  )
+                : _isView
                 ? Expanded(
                     child: SingleChildScrollView(
                       child: Padding(
@@ -188,7 +136,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
-                              children: products.map<Widget>((product) {
+                              children: favoriteProducts.map<Widget>((product) {
                                 return ProductCardListViewFavorites(
                                   product: product,
                                   textLabel: '',
@@ -200,7 +148,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            const ProductCardScreen(),
+                                            ProductCardScreen(product: product),
                                       ),
                                     );
                                   },
@@ -224,9 +172,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
                               childAspectRatio: 150 / 300,
                             ),
-                        itemCount: products.length,
+                        itemCount: favoriteProducts.length,
                         itemBuilder: (context, index) {
-                          final product = products[index];
+                          final product = favoriteProducts[index];
                           return ProductCardGridViewFavorites(
                             product: product,
                             onTap: () {},
@@ -235,7 +183,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      const ProductCardScreen(),
+                                      ProductCardScreen(product: product),
                                 ),
                               );
                             },

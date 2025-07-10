@@ -1,10 +1,13 @@
 import 'package:popover/popover.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:e_commerce_app/model/product.dart';
 import 'package:e_commerce_app/widget/app_color.dart';
 import 'package:e_commerce_app/widget/app_assets.dart';
 import 'package:e_commerce_app/widget/menu_pop_up.dart';
 import 'package:e_commerce_app/widget/text_screen.dart';
+import 'package:e_commerce_app/services/cart_service.dart';
+import 'package:e_commerce_app/services/favorites_service.dart';
 import 'package:e_commerce_app/widget/start_rating_widget.dart';
 
 class ProductCard extends StatefulWidget {
@@ -30,16 +33,20 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  bool _isLiked = false;
+  //bool _isLiked = false;
 
   @override
   Widget build(BuildContext context) {
+    final favoritesService = Provider.of<FavoritesService>(context);
+
+    final bool isFavorite = favoritesService.isProductFavorite(widget.product);
+
     return Card(
       color: AppColor.whiteBackgroundColor,
       elevation: 0.0,
       shape: const RoundedRectangleBorder(side: BorderSide.none),
       child: SizedBox(
-        height: 280,
+        height: 380,
         width: 150,
         child: Stack(
           children: [
@@ -52,7 +59,7 @@ class _ProductCardState extends State<ProductCard> {
                   Stack(
                     children: [
                       Container(
-                        height: 184,
+                        height: 160,
                         width: 148,
                         decoration: BoxDecoration(
                           image: DecorationImage(
@@ -124,16 +131,23 @@ class _ProductCardState extends State<ProductCard> {
                 clipBehavior: Clip.antiAlias,
                 child: InkWell(
                   onTap: () {
-                    setState(() {
-                      _isLiked = !_isLiked;
-                    });
+                    if (isFavorite) {
+                      favoritesService.removeProductFromFavorites(
+                        widget.product,
+                      );
+                    } else {
+                      favoritesService.addProductToFavorites(widget.product);
+                    }
+                    // setState(() {
+                    //   _isLiked = !_isLiked;
+                    // });
                   },
                   child: SizedBox(
                     width: 40,
                     height: 40,
                     child: Icon(
-                      _isLiked ? Icons.favorite : Icons.favorite_border,
-                      color: _isLiked ? Colors.red : Colors.grey,
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite ? Colors.red : Colors.grey,
                       size: 15,
                     ),
                   ),
@@ -169,10 +183,14 @@ class ProductCardList extends StatefulWidget {
 }
 
 class _ProductCardListState extends State<ProductCardList> {
-  bool _isLiked = false;
+  //bool _isLiked = false;
 
   @override
   Widget build(BuildContext context) {
+    final favoritesService = Provider.of<FavoritesService>(context);
+
+    final bool isFavorite = favoritesService.isProductFavorite(widget.product);
+
     return Padding(
       padding: const EdgeInsets.only(top: 4, bottom: 4),
       child: SizedBox(
@@ -243,16 +261,23 @@ class _ProductCardListState extends State<ProductCardList> {
                 clipBehavior: Clip.antiAlias,
                 child: InkWell(
                   onTap: () {
-                    setState(() {
-                      _isLiked = !_isLiked;
-                    });
+                    if (isFavorite) {
+                      favoritesService.removeProductFromFavorites(
+                        widget.product,
+                      );
+                    } else {
+                      favoritesService.addProductToFavorites(widget.product);
+                    }
+                    // setState(() {
+                    //   _isLiked = !_isLiked;
+                    // });
                   },
                   child: SizedBox(
                     width: 40,
                     height: 40,
                     child: Icon(
-                      _isLiked ? Icons.favorite : Icons.favorite_border,
-                      color: _isLiked ? Colors.red : Colors.grey,
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite ? Colors.red : Colors.grey,
                       size: 15,
                     ),
                   ),
@@ -298,7 +323,7 @@ class _ProductCardGridViewFavoritesState
       elevation: 0.0,
       shape: const RoundedRectangleBorder(side: BorderSide.none),
       child: SizedBox(
-        height: 300,
+        height: 380,
         width: 150,
         child: Stack(
           children: [
@@ -311,7 +336,7 @@ class _ProductCardGridViewFavoritesState
                   Stack(
                     children: [
                       Container(
-                        height: 184,
+                        height: 160,
                         width: 148,
                         decoration: BoxDecoration(
                           image: DecorationImage(
@@ -366,12 +391,12 @@ class _ProductCardGridViewFavoritesState
                           children: [
                             RichTextProduct(
                               textItem: 'Color: ',
-                              textDetailItem: widget.product.color,
+                              textDetailItem: '',
                             ),
                             const SizedBox(width: 12),
                             RichTextProduct(
                               textItem: 'Size: ',
-                              textDetailItem: widget.product.size,
+                              textDetailItem: '',
                             ),
                           ],
                         ),
@@ -442,6 +467,15 @@ class ProductCardListViewFavorites extends StatefulWidget {
 
 class _ProductCardListViewFavoritesState
     extends State<ProductCardListViewFavorites> {
+  late final CartService _cartService;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _cartService = Provider.of<CartService>(context, listen: false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -490,12 +524,18 @@ class _ProductCardListViewFavoritesState
                                 children: [
                                   RichTextProduct(
                                     textItem: 'Color: ',
-                                    textDetailItem: widget.product.color,
+                                    textDetailItem:
+                                        widget.product.colors.isNotEmpty
+                                        ? widget.product.colors.first
+                                        : 'N/A',
                                   ),
                                   const SizedBox(width: 12),
                                   RichTextProduct(
                                     textItem: 'Size: ',
-                                    textDetailItem: widget.product.size,
+                                    textDetailItem:
+                                        widget.product.sizes.isNotEmpty
+                                        ? widget.product.sizes.first
+                                        : 'N/A',
                                   ),
                                 ],
                               ),
@@ -533,7 +573,14 @@ class _ProductCardListViewFavoritesState
                 clipBehavior: Clip.antiAlias,
                 child: InkWell(
                   onTap: () {
-                    setState(() {});
+                    _cartService.quickAddToCart(widget.product);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Đã thêm ${widget.product.itemName} vào giỏ hàng!',
+                        ),
+                      ),
+                    );
                   },
                   child: const SizedBox(
                     width: 40,
@@ -584,7 +631,7 @@ class _ProductCardListViewMyBagState extends State<ProductCardListViewMyBag> {
     return Padding(
       padding: const EdgeInsets.only(top: 4, bottom: 4),
       child: SizedBox(
-        height: 132,
+        height: 140,
 
         child: Stack(
           children: [
@@ -593,7 +640,7 @@ class _ProductCardListViewMyBagState extends State<ProductCardListViewMyBag> {
               left: 0,
               right: 0,
 
-              height: 120,
+              height: 135,
 
               child: Card(
                 color: AppColor.whiteColor,
@@ -608,7 +655,7 @@ class _ProductCardListViewMyBagState extends State<ProductCardListViewMyBag> {
                     Image.asset(
                       widget.product.imageUrl,
                       fit: BoxFit.cover,
-                      height: 120,
+                      height: 135,
                       width: 104,
                     ),
                     Expanded(
@@ -623,12 +670,12 @@ class _ProductCardListViewMyBagState extends State<ProductCardListViewMyBag> {
                               children: [
                                 RichTextProduct(
                                   textItem: 'Color: ',
-                                  textDetailItem: widget.product.color,
+                                  textDetailItem: '',
                                 ),
                                 const SizedBox(width: 12),
                                 RichTextProduct(
                                   textItem: 'Size: ',
-                                  textDetailItem: widget.product.size,
+                                  textDetailItem: '',
                                 ),
                               ],
                             ),
@@ -686,6 +733,130 @@ class _ProductCardListViewMyBagState extends State<ProductCardListViewMyBag> {
                               },
                             ),
 
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: Center(
+                                child: TextPrice(
+                                  oldPrice: '',
+                                  newPrice: widget.product.newPrice,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProductCardOrder extends StatefulWidget {
+  final Product product;
+  final String textLabel;
+  final Color colorTextLabel;
+  final Color colorLabel;
+
+  const ProductCardOrder({
+    required this.product,
+    required this.textLabel,
+    required this.colorTextLabel,
+    required this.colorLabel,
+
+    super.key,
+  });
+
+  @override
+  State<ProductCardOrder> createState() => _ProductCardOrderState();
+}
+
+class _ProductCardOrderState extends State<ProductCardOrder> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4, bottom: 4),
+      child: SizedBox(
+        height: 132,
+
+        child: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+
+              height: 120,
+
+              child: Card(
+                color: AppColor.whiteColor,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                elevation: 4.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      widget.product.imageUrl,
+                      fit: BoxFit.cover,
+                      height: 120,
+                      width: 104,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextItemProduct(text: widget.product.itemName),
+                            const Text(
+                              'Mango',
+                              style: const TextStyle(
+                                color: AppColor.grayColor,
+                                fontSize: 11,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                RichTextProduct(
+                                  textItem: 'Color: ',
+                                  textDetailItem: '',
+                                ),
+                                const SizedBox(width: 12),
+                                RichTextProduct(
+                                  textItem: 'Size: ',
+                                  textDetailItem: '',
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                RichTextProduct(
+                                  textItem: 'Units: ',
+                                  textDetailItem: '1',
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 50,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
                             Padding(
                               padding: const EdgeInsets.only(bottom: 12),
                               child: Center(

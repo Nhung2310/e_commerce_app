@@ -525,8 +525,11 @@ class _RatingAndReviewsScreenState extends State<RatingAndReviewsScreen> {
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setStateInBottomSheet) {
+            final double keyboardHeight = MediaQuery.of(
+              context,
+            ).viewInsets.bottom;
             return FractionallySizedBox(
-              heightFactor: 0.85,
+              // heightFactor: 0.85,
               child: Container(
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -536,164 +539,128 @@ class _RatingAndReviewsScreenState extends State<RatingAndReviewsScreen> {
                   color: AppColor.whiteBackgroundColor,
                 ),
                 child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const SizedBox(height: 8),
+                  padding: EdgeInsets.only(
+                    left: 16.0,
+                    right: 16.0,
+                    top: 16.0,
+                    bottom: 16.0 + keyboardHeight,
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 8),
 
-                          Container(
-                            width: 40,
-                            height: 4,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(2),
-                            ),
+                        Container(
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(2),
                           ),
-                          const SizedBox(height: 16),
+                        ),
+                        const SizedBox(height: 16),
 
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Center(
-                              child: Text(
-                                'What is your rate?',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColor.blackColor,
-                                ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Center(
+                            child: Text(
+                              'What is your rate?',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.blackColor,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 16),
+                        ),
+                        const SizedBox(height: 16),
 
-                          StarRatingInput(
-                            starCount: 5,
-                            iconSize: 50,
-                            initialRating: _finalRating.toDouble(),
-                            onRatingChanged: (newRating) {
-                              setStateInBottomSheet(() {
-                                _finalRating = newRating;
-                              });
-                              print('Số sao được chọn: $_finalRating');
-                            },
-                          ),
-                          const SizedBox(height: 24),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Center(
-                              child: Text(
-                                'Please share your opinion about the product',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColor.blackColor,
-                                ),
+                        StarRatingInput(
+                          starCount: 5,
+                          iconSize: 50,
+                          initialRating: _finalRating.toDouble(),
+                          onRatingChanged: (newRating) {
+                            setStateInBottomSheet(() {
+                              _finalRating = newRating;
+                            });
+                            print('Số sao được chọn: $_finalRating');
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Center(
+                            child: Text(
+                              'Please share your opinion about the product',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.blackColor,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 16),
+                        ),
+                        const SizedBox(height: 16),
 
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                            ),
-                            child: TextFormField(
-                              controller: _reviewTextController,
-                              decoration: InputDecoration(
-                                hintText: 'Your review',
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: TextFormField(
+                            controller: _reviewTextController,
+                            decoration: InputDecoration(
+                              hintText: 'Your review',
 
-                                alignLabelWithHint: true,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide.none,
-                                ),
-                                fillColor: AppColor.whiteColor,
-                                filled: true,
+                              alignLabelWithHint: true,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide.none,
                               ),
-                              keyboardType: TextInputType.multiline,
-                              minLines: 5,
-                              maxLines: null,
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'Đánh giá không được để trống.';
-                                }
-                                if (value.length < 10) {
-                                  return 'Đánh giá phải có ít nhất 10 ký tự.';
-                                }
-                                return null;
-                              },
+                              fillColor: AppColor.whiteColor,
+                              filled: true,
                             ),
-                          ),
-                          const SizedBox(height: 16),
-
-                          // Padding(
-                          //   padding: const EdgeInsets.symmetric(
-                          //     horizontal: 16.0,
-                          //   ),
-                          //   child: Align(
-                          //     alignment: Alignment.centerLeft,
-                          //     child: Container(
-                          //       height: 104,
-                          //       width: 104,
-                          //       decoration: BoxDecoration(
-                          //         borderRadius: BorderRadius.circular(10),
-                          //         color: AppColor.whiteColor,
-                          //       ),
-                          //       child: const Column(
-                          //         mainAxisAlignment: MainAxisAlignment.center,
-                          //         children: [
-                          //           CircleAvatar(
-                          //             backgroundColor: AppColor.redColor,
-                          //             radius: 20,
-                          //             child: Icon(
-                          //               Icons.camera_alt,
-                          //               color: AppColor.whiteColor,
-                          //               size: 20,
-                          //             ),
-                          //           ),
-                          //           SizedBox(height: 4),
-                          //           Text(
-                          //             textAlign: TextAlign.center,
-                          //             'Add your photos',
-                          //             style: TextStyle(fontSize: 12),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
-                          const ImagePickerWidget(),
-                          const SizedBox(height: 24),
-                          ButtonOnclick(
-                            textButton: 'SEND REVIEW',
-                            functionButtonClick: () {
-                              if (_formKey.currentState!.validate()) {
-                                if (_finalRating == 0) {
-                                  setStateInBottomSheet(() {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'Vui lòng chọn số sao để đánh giá.',
-                                        ),
-                                      ),
-                                    );
-                                  });
-                                  return;
-                                }
-
-                                Navigator.pop(context);
+                            keyboardType: TextInputType.multiline,
+                            minLines: 5,
+                            maxLines: null,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Đánh giá không được để trống.';
                               }
+                              if (value.length < 10) {
+                                return 'Đánh giá phải có ít nhất 10 ký tự.';
+                              }
+                              return null;
                             },
                           ),
-                          const SizedBox(height: 24),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 16),
+                        const ImagePickerWidget(),
+                        const SizedBox(height: 24),
+                        ButtonOnclick(
+                          textButton: 'SEND REVIEW',
+                          functionButtonClick: () {
+                            if (_formKey.currentState!.validate()) {
+                              if (_finalRating == 0) {
+                                setStateInBottomSheet(() {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Vui lòng chọn số sao để đánh giá.',
+                                      ),
+                                    ),
+                                  );
+                                });
+                                return;
+                              }
+
+                              Navigator.pop(context);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                      ],
                     ),
                   ),
                 ),

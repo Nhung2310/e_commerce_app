@@ -4,25 +4,70 @@ import 'package:image_picker/image_picker.dart';
 import 'package:e_commerce_app/widget/app_color.dart';
 
 class ImagePickerWidget extends StatefulWidget {
-  const ImagePickerWidget({Key? key}) : super(key: key);
+  final ValueChanged<List<File>>? onImagesChanged;
+
+  const ImagePickerWidget({Key? key, this.onImagesChanged}) : super(key: key);
 
   @override
   State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
 }
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
-  File? _imageFile;
-  Future<void> _pickImage(ImageSource source) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: source);
+  final List<File> _imageFiles = [];
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickMultiImages() async {
+    final List<XFile> pickedFiles = await _picker.pickMultiImage();
+
+    if (pickedFiles.isNotEmpty) {
+      setState(() {
+        for (XFile pickedFile in pickedFiles) {
+          _imageFiles.add(File(pickedFile.path));
+        }
+
+        if (widget.onImagesChanged != null) {
+          widget.onImagesChanged!(_imageFiles);
+        }
+      });
+    } else {
+      print('The user has not selected any images.');
+    }
+
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> _pickImageFromCamera() async {
+    final XFile? pickedFile = await _picker.pickImage(
+      source: ImageSource.camera,
+    );
 
     if (pickedFile != null) {
       setState(() {
-        _imageFile = File(pickedFile.path);
+        _imageFiles.add(File(pickedFile.path));
+
+        if (widget.onImagesChanged != null) {
+          widget.onImagesChanged!(_imageFiles);
+        }
       });
     } else {
-      print('Người dùng chưa chọn ảnh nào.');
+      print('The user has not selected any images.');
     }
+
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      _imageFiles.removeAt(index);
+
+      if (widget.onImagesChanged != null) {
+        widget.onImagesChanged!(_imageFiles);
+      }
+    });
   }
 
   void _showImageSourceActionSheet(BuildContext context) {
@@ -37,16 +82,14 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 leading: const Icon(Icons.camera_alt),
                 title: const Text('Camera'),
                 onTap: () {
-                  Navigator.pop(context);
-                  _pickImage(ImageSource.camera);
+                  _pickImageFromCamera();
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library),
-                title: const Text('Gallery'),
+                title: const Text('Library'),
                 onTap: () {
-                  Navigator.pop(context);
-                  _pickImage(ImageSource.gallery);
+                  _pickMultiImages();
                 },
               ),
             ],
@@ -58,47 +101,83 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        _showImageSourceActionSheet(context);
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _imageFile == null
-              ? CircleAvatar(
-                  backgroundColor: AppColor.redColor,
-                  radius: 20,
-                  child: Icon(
-                    Icons.camera_alt,
-                    color: AppColor.whiteColor,
-                    size: 20,
+    return Wrap(
+      spacing: 8.0,
+      runSpacing: 8.0,
+      children: [
+        ..._imageFiles.asMap().entries.map((entry) {
+          int index = entry.key;
+          File image = entry.value;
+          return Stack(
+            children: [
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: FileImage(image),
+                    fit: BoxFit.cover,
                   ),
-                )
-              : CircleAvatar(
-                  radius: 20,
-                  backgroundImage: FileImage(_imageFile!),
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: CircleAvatar(
-                      backgroundColor: AppColor.redColor,
-                      radius: 8,
-                      child: Icon(
-                        Icons.edit,
-                        color: AppColor.whiteColor,
-                        size: 10,
-                      ),
+                ),
+              ),
+              Positioned(
+                top: 5,
+                right: 5,
+                child: GestureDetector(
+                  onTap: () => _removeImage(index),
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      color: AppColor.whiteColor,
+                      size: 16,
                     ),
                   ),
                 ),
-          SizedBox(height: 4),
-          Text(
-            textAlign: TextAlign.center,
-            _imageFile == null ? 'Add your photos' : 'Change photo',
-            style: TextStyle(fontSize: 12),
+              ),
+            ],
+          );
+        }).toList(),
+
+        GestureDetector(
+          onTap: () {
+            _showImageSourceActionSheet(context);
+          },
+          child: Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey[200],
+            ),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  backgroundColor: AppColor.redColor,
+                  radius: 25,
+                  child: Icon(
+                    Icons.camera_alt,
+                    color: AppColor.whiteColor,
+                    size: 25,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Add Image',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12, color: AppColor.blackColor),
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:e_commerce_app/model/product.dart';
 import 'package:e_commerce_app/widget/app_color.dart';
+import 'package:e_commerce_app/data/product_data.dart';
 import 'package:e_commerce_app/widget/app_assets.dart';
 import 'package:e_commerce_app/widget/text_screen.dart';
 import 'package:e_commerce_app/widget/product_card.dart';
@@ -9,7 +10,8 @@ import 'package:e_commerce_app/widget/start_rating_widget.dart';
 import 'package:e_commerce_app/ui/rating_and_reviews_screen.dart';
 
 class ProductCardScreen extends StatefulWidget {
-  const ProductCardScreen({super.key});
+  final Product product;
+  ProductCardScreen({required this.product, super.key});
 
   @override
   State<ProductCardScreen> createState() => _ProductCardScreenState();
@@ -19,38 +21,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   String? _selectedSize;
   bool _isLiked = false;
   bool _isClick = false;
-  final List<Product> products = [
-    Product(
-      imageUrl: AppAssets.imageHome2,
-      rating: 3.5,
-      brandName: 'Dorothy Perkins',
-      itemName: 'Evening Dress',
-      oldPrice: '123\$',
-      newPrice: '23\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageMenHoodies,
-      rating: 4.0,
-      brandName: 'Mango',
-      itemName: 'Sporty Dress',
-      oldPrice: '75\$',
-      newPrice: '45\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageVisualSearch,
-      rating: 5.0,
-      brandName: 'Gucci',
-      itemName: 'Classic Bag',
-      oldPrice: '500\$',
-      newPrice: '399\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,8 +120,8 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                     child: TextItemProduct(text: 'hehe'),
                   ),
                   const Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: const StartRatingWidget(startCount: 5, rating: 4),
+                    padding: EdgeInsets.all(8.0),
+                    child: StartRatingWidget(startCount: 5, rating: 4),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -224,7 +195,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                           height: 300,
                           child: ListView(
                             scrollDirection: Axis.horizontal,
-                            children: products.map((product) {
+                            children: mockProducts.map((product) {
                               return ProductCard(
                                 product: product,
                                 textLabel: 'New',

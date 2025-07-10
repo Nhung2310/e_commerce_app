@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:e_commerce_app/model/product.dart';
 import 'package:e_commerce_app/widget/app_color.dart';
-import 'package:e_commerce_app/widget/app_assets.dart';
+import 'package:e_commerce_app/data/product_data.dart';
 import 'package:e_commerce_app/widget/text_screen.dart';
 import 'package:e_commerce_app/widget/product_card.dart';
 import 'package:e_commerce_app/ui/product_card_screen.dart';
 import 'package:e_commerce_app/widget/icon_button_screen.dart';
-import 'package:e_commerce_app/ui/rating_and_reviews_screen.dart';
 import 'package:e_commerce_app/ui/categories/filters_screen.dart';
+import 'package:e_commerce_app/model/product.dart'; // <<< THÊM DÒNG NÀY: Cần import model Product
+// lib/ui/catalog1_screen.dart
+
+// import 'package:e_commerce_app/widget/app_assets.dart'; // <<< CÓ THỂ KHÔNG CẦN NẾU KHÔNG DÙNG TRỰC TIẾP
+
+// >>>
 
 class Catalog1Screen extends StatefulWidget {
   const Catalog1Screen({super.key});
@@ -20,70 +24,102 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
   bool _isView = false;
   String _selectedSortOption = 'Popular';
   String? _selectedSize;
-  final List<Product> products = [
-    Product(
-      imageUrl: AppAssets.imageHome2,
-      rating: 3.5,
-      brandName: 'Dorothy Perkins',
-      itemName: 'Evening Dress',
-      oldPrice: '123\$',
-      newPrice: '23\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageMenHoodies,
-      rating: 4.0,
-      brandName: 'Mango',
-      itemName: 'Sporty Dress',
-      oldPrice: '75\$',
-      newPrice: '45\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageVisualSearch,
-      rating: 5.0,
-      brandName: 'Gucci',
-      itemName: 'Classic Bag',
-      oldPrice: '500\$',
-      newPrice: '399\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageHome2,
-      rating: 3.5,
-      brandName: 'Dorothy Perkins',
-      itemName: 'Evening Dress',
-      oldPrice: '123\$',
-      newPrice: '23\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageMenHoodies,
-      rating: 4.0,
-      brandName: 'Mango',
-      itemName: 'Sporty Dress',
-      oldPrice: '75\$',
-      newPrice: '45\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageVisualSearch,
-      rating: 5.0,
-      brandName: 'Gucci',
-      itemName: 'Classic Bag',
-      oldPrice: '500\$',
-      newPrice: '399\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-  ];
+
+  // <<< THÊM CÁC BIẾN TRẠNG THÁI MỚI VÀ KHỞI TẠO
+  String _selectedFilterSubCategory =
+      'All'; // Biến để quản lý lựa chọn lọc sub-category
+  List<Product> _displayProducts = []; // Danh sách sản phẩm sẽ hiển thị
+  // >>>
+
+  @override
+  void initState() {
+    super.initState();
+    _applyFiltersAndSort(); // <<< GỌI HÀM LỌC VÀ SẮP XẾP KHI KHỞI TẠO TRANG
+  }
+
+  // <<< HÀM LỌC VÀ SẮP XẾP SẢN PHẨM
+  void _applyFiltersAndSort() {
+    // 1. Lọc sản phẩm chỉ thuộc mainCategory 'Tops' và genderCategory 'Women'
+    List<Product> tempProducts = mockProducts.where((product) {
+      // Đảm bảo Product model của bạn có các thuộc tính này (mainCategory, genderCategory, subCategories)
+      return product.mainCategory == 'Tops' &&
+          product.genderCategory == 'Women';
+    }).toList();
+
+    // 2. Lọc theo sub-category nếu có lựa chọn khác 'All'
+    if (_selectedFilterSubCategory != 'All') {
+      tempProducts = tempProducts
+          .where(
+            (product) =>
+                product.subCategories.contains(_selectedFilterSubCategory),
+          )
+          .toList();
+    }
+
+    // 3. Sắp xếp sản phẩm (giữ nguyên logic sắp xếp của bạn)
+    switch (_selectedSortOption) {
+      case 'Popular':
+        tempProducts.sort((a, b) => b.rating.compareTo(a.rating));
+        break;
+      case 'Newest':
+        // Giả sử có một trường 'id' hoặc 'createdAt' để sắp xếp theo newest
+        // Nếu không có, bạn có thể sắp xếp theo tên hoặc thứ tự mặc định
+        tempProducts.sort((a, b) => b.id.compareTo(a.id));
+        break;
+      case 'Customer review':
+        tempProducts.sort((a, b) => b.rating.compareTo(a.rating));
+        break;
+      case 'Price: lowest to high':
+        // Cần đảm bảo newPrice có thể parse thành double
+        tempProducts.sort(
+          (a, b) => double.parse(
+            a.newPrice.replaceAll('\$', ''),
+          ).compareTo(double.parse(b.newPrice.replaceAll('\$', ''))),
+        );
+        break;
+      case 'Price: highest to low':
+        tempProducts.sort(
+          (a, b) => double.parse(
+            b.newPrice.replaceAll('\$', ''),
+          ).compareTo(double.parse(a.newPrice.replaceAll('\$', ''))),
+        );
+        break;
+      default:
+        break;
+    }
+
+    setState(() {
+      _displayProducts = tempProducts;
+    });
+  }
+  // >>>
+
+  // <<< HÀM LẤY CÁC SUB-CATEGORY DUY NHẤT ĐỂ HIỂN THỊ TRÊN CÁC NÚT LỌC
+  List<String> _getUniqueSubCategoriesForTops() {
+    Set<String> subCategories = {'All'}; // Luôn có 'All' là lựa chọn đầu tiên
+    for (var product in mockProducts) {
+      if (product.mainCategory == 'Tops' && product.genderCategory == 'Women') {
+        subCategories.addAll(product.subCategories);
+      }
+    }
+    // Chuyển Set thành List và sắp xếp (ví dụ: theo bảng chữ cái)
+    List<String> sortedSubCategories = subCategories.toList();
+    // Bạn có thể tùy chỉnh thứ tự sắp xếp ở đây nếu muốn 'T-shirts', 'Crop tops' luôn ở đầu
+    sortedSubCategories.sort((a, b) {
+      if (a == 'All') return -1; // Đảm bảo 'All' luôn ở đầu
+      if (b == 'All') return 1;
+      return a.compareTo(b);
+    });
+    return sortedSubCategories;
+  }
+  // >>>
+
   @override
   Widget build(BuildContext context) {
+    // <<< LẤY DANH SÁCH CÁC SUB-CATEGORY ĐỂ HIỂN THỊ NÚT LỌC
+    final List<String> subCategoryFilters = _getUniqueSubCategoriesForTops();
+    // >>>
+
     return Scaffold(
       backgroundColor: AppColor.whiteBackgroundColor,
       appBar: _isView
@@ -93,12 +129,10 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
                   Navigator.of(context).pop();
                 },
               ),
-
               title: null,
               actions: [
                 IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
               ],
-
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(kToolbarHeight),
                 child: Align(
@@ -128,16 +162,22 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
             SizedBox(
               height: 60,
 
-              child: ListView(
+              child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                children: [
-                  ButtonCatalog(text: 'T-shirts'),
-                  ButtonCatalog(text: 'Crop tops'),
-                  ButtonCatalog(text: 'Sleeveless'),
-                  ButtonCatalog(text: 'T-shirts'),
-                  ButtonCatalog(text: 'Crop tops'),
-                  ButtonCatalog(text: 'Sleeveless'),
-                ],
+                itemCount: subCategoryFilters.length,
+                itemBuilder: (context, index) {
+                  final filterName = subCategoryFilters[index];
+                  return ButtonCatalog(
+                    text: filterName,
+                    isSelected: _selectedFilterSubCategory == filterName,
+                    onTap: () {
+                      setState(() {
+                        _selectedFilterSubCategory = filterName;
+                        _applyFiltersAndSort();
+                      });
+                    },
+                  );
+                },
               ),
             ),
             Container(
@@ -145,7 +185,6 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
               color: AppColor.whiteBackgroundColor,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                 children: [
                   FiltersButton(
                     iconButton: const Icon(Icons.filter_list),
@@ -159,7 +198,6 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
                       );
                     },
                   ),
-
                   FiltersButton(
                     iconButton: const Icon(Icons.swap_vert),
                     text: _selectedSortOption,
@@ -167,7 +205,6 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
                       _showSortOptions();
                     },
                   ),
-
                   IconButton(
                     onPressed: () {
                       setState(() {
@@ -183,46 +220,50 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
                 ],
               ),
             ),
-            _isView
-                ? Expanded(
-                    child: SingleChildScrollView(
+
+            Expanded(
+              child: _displayProducts.isEmpty
+                  ? const Center(child: Text('Không có sản phẩm phù hợp.'))
+                  : _isView
+                  ? SingleChildScrollView(
                       child: Padding(
                         padding: const EdgeInsets.all(12),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            ListView(
+                            ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              children: products.map<Widget>((product) {
+                              itemCount: _displayProducts
+                                  .length, // <<< DÙNG _displayProducts
+                              itemBuilder: (context, index) {
+                                final product =
+                                    _displayProducts[index]; // <<< LẤY PRODUCT TỪ _displayProducts
                                 return ProductCardList(
                                   product: product,
                                   textLabel: '',
                                   colorTextLabel: AppColor.whiteColor,
                                   colorLabel: AppColor.redColorBox,
                                   onTap: () {
-                                    showModelBottomSheetSize();
+                                    showModelBottomSheetSize(product);
                                   },
                                   onDoubleTap: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            const ProductCardScreen(),
+                                            ProductCardScreen(product: product),
                                       ),
                                     );
                                   },
                                 );
-                              }).toList(),
+                              },
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  )
-                : Expanded(
-                    child: Padding(
+                    )
+                  : Padding(
                       padding: const EdgeInsets.all(12),
                       child: GridView.builder(
                         gridDelegate:
@@ -230,34 +271,33 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
                               crossAxisCount: 2,
                               mainAxisSpacing: 10.0,
                               crossAxisSpacing: 10.0,
-
                               childAspectRatio: 150 / 290,
                             ),
-                        itemCount: products.length,
+                        itemCount: _displayProducts.length,
                         itemBuilder: (context, index) {
-                          final product = products[index];
+                          final product = _displayProducts[index];
                           return ProductCard(
                             product: product,
                             onTap: () {
-                              showModelBottomSheetSize();
+                              showModelBottomSheetSize(product);
                             },
                             onDoubleTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      const ProductCardScreen(),
+                                      ProductCardScreen(product: product),
                                 ),
                               );
                             },
-
                             colorTextLabel: AppColor.whiteColor,
                             colorLabel: Colors.transparent,
                           );
                         },
                       ),
                     ),
-                  ),
+            ),
+            // >>>
           ],
         ),
       ),
@@ -311,6 +351,7 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
 
                             setState(() {
                               _selectedSortOption = optionText;
+                              _applyFiltersAndSort();
                             });
                             Navigator.pop(context);
                           },
@@ -333,12 +374,16 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
     );
   }
 
-  void showModelBottomSheetSize() {
+  // <<< THAY ĐỔI showModelBottomSheetSize ĐỂ NHẬN ĐỐI TƯỢNG PRODUCT
+  void showModelBottomSheetSize(Product product) {
+    // Reset selected size khi mở bottom sheet mới
+    _selectedSize = null;
+
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
+          builder: (BuildContext context, StateSetter setStateBottomSheet) {
             return Container(
               height: 360,
               color: AppColor.whiteBackgroundColor,
@@ -357,21 +402,12 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        _buildSizeOption('XS', setState),
-                        _buildSizeOption('S', setState),
-                        _buildSizeOption('M', setState),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        _buildSizeOption('L', setState),
-                        _buildSizeOption('XL', setState),
-                      ],
+                    child: Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      children: product.sizes.map((size) {
+                        return _buildSizeOption(size, setStateBottomSheet);
+                      }).toList(),
                     ),
                   ),
                   const Divider(),
@@ -394,8 +430,19 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
                     child: ButtonOnclick(
                       textButton: 'ADD TO CART',
                       functionButtonClick: () {
-                        print('Kích thước đã chọn: $_selectedSize');
-                        Navigator.pop(context);
+                        if (_selectedSize != null) {
+                          print(
+                            'Kích thước đã chọn: $_selectedSize cho sản phẩm: ${product.itemName}',
+                          );
+
+                          Navigator.pop(context);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Vui lòng chọn một kích thước.'),
+                            ),
+                          );
+                        }
                       },
                     ),
                   ),
@@ -407,12 +454,15 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
       },
     );
   }
+  // >>>
 
-  Widget _buildSizeOption(String size, StateSetter setState) {
+  // <<< THAY ĐỔI _buildSizeOption ĐỂ NHẬN StateSetter CỦA BOTTOM SHEET
+  Widget _buildSizeOption(String size, StateSetter setStateBottomSheet) {
     bool isSelected = (_selectedSize == size);
     return GestureDetector(
       onTap: () {
-        setState(() {
+        setStateBottomSheet(() {
+          // Cập nhật state của bottom sheet
           _selectedSize = size;
         });
       },
@@ -440,4 +490,6 @@ class _Catalog1ScreenState extends State<Catalog1Screen> {
       ),
     );
   }
+
+  // >>>
 }

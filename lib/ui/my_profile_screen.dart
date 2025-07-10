@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:e_commerce_app/widget/app_color.dart';
 import 'package:e_commerce_app/widget/app_assets.dart';
+import 'package:e_commerce_app/ui/settings_screen.dart';
 import 'package:e_commerce_app/widget/text_screen.dart';
 import 'package:e_commerce_app/ui/my_orders_screen.dart';
 
@@ -16,34 +17,55 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [const Icon(Icons.search, color: AppColor.blackColor)],
-        flexibleSpace: FlexibleSpaceBar(
-          title: TextHeadLine(text: 'My profile'),
+        actions: const [Icon(Icons.search, color: AppColor.blackColor)],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(56.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
+              child: TextHeadLine(text: 'My profile'),
+            ),
+          ),
         ),
       ),
       body: Column(
         children: [
-          const Row(
-            children: [
-              CircleAvatar(child: Image(image: AssetImage(AppAssets.avatar))),
-              Column(
-                children: [
-                  Text(
-                    'ChangNhung',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: AppColor.blackColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage: AssetImage(AppAssets.avatar),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'ChangNhung',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: AppColor.blackColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'test@gmail.com',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColor.grayColor,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    'test@gmail.com',
-                    style: TextStyle(fontSize: 14, color: AppColor.grayColor),
-                  ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
+          const SizedBox(height: 8),
           _tabBarMyProfile('My orders', 'Already have 12 orders', () {
             Navigator.push(
               context,
@@ -54,7 +76,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           _tabBarMyProfile('Payment methods', 'Visa  **34', () {}),
           _tabBarMyProfile('Promocodes', 'You have special promocodes', () {}),
           _tabBarMyProfile('My reviews', 'Reviews for 4 items', () {}),
-          _tabBarMyProfile('Settings', 'Notifications, password', () {}),
+          _tabBarMyProfile('Settings', 'Notifications, password', () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsScreen()),
+            );
+          }),
         ],
       ),
     );
@@ -68,9 +95,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
 
               children: [
                 Text(
@@ -85,7 +113,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   text2,
                   style: const TextStyle(
                     color: AppColor.grayColor,
-                    fontSize: 12,
+                    fontSize: 14,
                   ),
                 ),
               ],
@@ -93,7 +121,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             const Icon(
               Icons.chevron_right,
               color: AppColor.grayColor,
-              size: 12,
+              size: 24,
             ),
           ],
         ),

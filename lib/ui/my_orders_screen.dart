@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:e_commerce_app/widget/app_color.dart';
 import 'package:e_commerce_app/widget/text_screen.dart';
+import 'package:e_commerce_app/order_details_screen.dart';
 import 'package:e_commerce_app/widget/icon_button_screen.dart';
 
 class MyOrdersScreen extends StatefulWidget {
@@ -21,10 +22,18 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
           },
         ),
         actions: const [Icon(Icons.search)],
-        flexibleSpace: FlexibleSpaceBar(title: TextHeadLine(text: 'My Order')),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(56.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
+              child: TextHeadLine(text: 'My Order'),
+            ),
+          ),
+        ),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -37,10 +46,36 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
               ],
             ),
           ),
-          _orderCard('Order №1947034', '05-12-2019', 'IW3475453455', 3, 125),
-          _orderCard('Order №1947034', '05-12-2019', 'IW3475453455', 3, 125),
-          _orderCard('Order №1947034', '05-12-2019', 'IW3475453455', 3, 125),
-          _orderCard('Order №1947034', '05-12-2019', 'IW3475453455', 3, 125),
+          _orderCard(
+            'Order №1947034',
+            '05-12-2019',
+            'IW3475453455',
+            3,
+            125,
+            () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const OrderDetailsScreen(),
+                ),
+              );
+            },
+          ),
+          _orderCard(
+            'Order №1947034',
+            '05-12-2019',
+            'IW3475453455',
+            3,
+            125,
+            () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const OrderDetailsScreen(),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -52,7 +87,11 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
       style: ElevatedButton.styleFrom(backgroundColor: AppColor.blackColor),
       child: Text(
         text,
-        style: const TextStyle(color: AppColor.whiteColor, fontSize: 14),
+        style: const TextStyle(
+          color: AppColor.whiteColor,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -63,6 +102,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
     String number,
     int quantity,
     double amount,
+    Function _onTap,
   ) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -140,7 +180,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _onTap();
+                    },
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: AppColor.blackColor),
                     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:e_commerce_app/model/product.dart';
 import 'package:e_commerce_app/widget/app_color.dart';
+import 'package:e_commerce_app/data/product_data.dart';
 import 'package:e_commerce_app/widget/app_assets.dart';
 import 'package:e_commerce_app/widget/text_screen.dart';
 import 'package:e_commerce_app/widget/product_card.dart';
@@ -17,68 +18,6 @@ class MyBagScreen extends StatefulWidget {
 class _MyBagScreenState extends State<MyBagScreen> {
   final TextEditingController _promoCodeController = TextEditingController();
   bool _hasText = false;
-  final List<Product> products = [
-    Product(
-      imageUrl: AppAssets.imageHome2,
-      rating: 3.5,
-      brandName: 'Dorothy Perkins',
-      itemName: 'Evening Dress',
-      oldPrice: '123\$',
-      newPrice: '23\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageMenHoodies,
-      rating: 4.0,
-      brandName: 'Mango',
-      itemName: 'Sporty Dress',
-      oldPrice: '75\$',
-      newPrice: '45\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageVisualSearch,
-      rating: 5.0,
-      brandName: 'Gucci',
-      itemName: 'Classic Bag',
-      oldPrice: '500\$',
-      newPrice: '399\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageHome2,
-      rating: 3.5,
-      brandName: 'Dorothy Perkins',
-      itemName: 'Evening Dress',
-      oldPrice: '123\$',
-      newPrice: '23\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageMenHoodies,
-      rating: 4.0,
-      brandName: 'Mango',
-      itemName: 'Sporty Dress',
-      oldPrice: '75\$',
-      newPrice: '45\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-    Product(
-      imageUrl: AppAssets.imageVisualSearch,
-      rating: 5.0,
-      brandName: 'Gucci',
-      itemName: 'Classic Bag',
-      oldPrice: '500\$',
-      newPrice: '399\$',
-      color: 'green',
-      size: 'Xl',
-    ),
-  ];
 
   @override
   void dispose() {
@@ -123,7 +62,7 @@ class _MyBagScreenState extends State<MyBagScreen> {
               padding: const EdgeInsets.all(12),
               child: ListView(
                 scrollDirection: Axis.vertical,
-                children: products.map<Widget>((product) {
+                children: mockProducts.map<Widget>((product) {
                   return ProductCardListViewMyBag(
                     product: product,
                     textLabel: '',

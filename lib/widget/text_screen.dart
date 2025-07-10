@@ -443,3 +443,46 @@ class TextCard extends StatelessWidget {
     );
   }
 }
+
+class RichTextInformationOrder extends StatelessWidget {
+  final String textItem;
+  final String textDetailItem;
+
+  const RichTextInformationOrder({
+    Key? key,
+    required this.textItem,
+    required this.textDetailItem,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              textItem,
+              style: const TextStyle(fontSize: 14, color: AppColor.grayColor),
+            ),
+          ),
+          const SizedBox(width: 8),
+
+          Expanded(
+            child: Text(
+              textDetailItem,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColor.blackColor,
+                fontWeight: FontWeight.bold,
+              ),
+              softWrap: true,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
